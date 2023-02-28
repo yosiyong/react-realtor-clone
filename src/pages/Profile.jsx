@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { getAuth, updateProfile } from "firebase/auth";
+import { db, auth } from "../firebase";
+import { updateProfile } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { db } from "../firebase";
 import { FcHome } from "react-icons/fc";
 import {
   doc,
@@ -13,7 +13,7 @@ import {
 export default function Profile() {
   const { t } = useTranslation();
   //認証済みデータ取得
-  const auth = getAuth();
+  //const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetail, setChangeDetail] = useState(false);
   const [formData, setFormData] = useState({

@@ -2,16 +2,14 @@ import { useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { db, auth, storage } from "../firebase";
-//import { getAuth } from "firebase/auth";
 import {
-  getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
 
 import { v4 as uuidv4 } from "uuid";
-//import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -83,6 +81,7 @@ export default function CreateListing() {
     setLoading(true);
 
     //割引価格 >= 通常価格の場合、エラー
+    //注意：stringをnumberに変換(+をつける)
     if (+discountedPrice >= +regularPrice) {
       setLoading(false);
       toast.error(t('Discounted price needs to be less than regular price'));
@@ -168,26 +167,31 @@ export default function CreateListing() {
     ).catch((error) => {
       console.log("image upload error:",error)
       setLoading(false);
-      toast.error("Images not uploaded");
+      toast.error(t("Images not uploaded"));
       return;
     });
     console.log('Uploaded image Url:',imgUrls);
 
-    // const formDataCopy = {
-    //   ...formData,
-    //   imgUrls,
-    //   geolocation,
-    //   timestamp: serverTimestamp(),
-    //   userRef: auth.currentUser.uid,
-    // };
-    // delete formDataCopy.images;
-    // !formDataCopy.offer && delete formDataCopy.discountedPrice;
-    // delete formDataCopy.latitude;
-    // delete formDataCopy.longitude;
-    // const docRef = await addDoc(collection(db, "listings"), formDataCopy);
-    // setLoading(false);
-    // toast.success("Listing created");
-    // navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+    //入力データ変数にDB登録するイメージ保存先URL、経度緯度、timestamp,uid情報を格納
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+      userRef: auth.currentUser.uid,
+    };
+
+    //入力データ変数から登録不要データ削除
+    delete formDataCopy.images;
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    delete formDataCopy.latitude;
+    delete formDataCopy.longitude;
+
+    //DB登録
+    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+    setLoading(false);
+    toast.success(t("Listing created"));
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   }
 
   if (loading) {
@@ -339,7 +343,7 @@ return (
         <div className="mb-6">
           <p className="text-lg mt-6 font-semibold">{t('Discount price')}</p>
           <div className="flex w-full justify-center items-center space-x-6">
-            <input type="number" id="discountPrice" value={discountPrice} onChange={onChange} 
+            <input type="number" id="discountedPrice" value={discountedPrice} onChange={onChange} 
               min="50" max="1000000000" required={offer} 
               className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center" />
 
