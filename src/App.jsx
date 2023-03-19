@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
@@ -7,9 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import Offers from "./pages/Offers";
 import Header from "./components/Header";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import CreateListing from "./pages/CreateListing";
+import EditListing from "./pages/EditListing";
 
 function App() {
   return (
@@ -30,8 +31,12 @@ function App() {
           <Route path="/offers" element={<Offers/>}/>
 
           {/* ログイン状態の場合のみアクセス可能 */}
-          <Route path="/create-listing" element={<PrivateRoute />}>
+          <Route path="create-listing" element={<PrivateRoute />}>
             <Route path="/create-listing" element={<CreateListing/>}/>
+          </Route>
+
+          <Route path="edit-listing" element={<PrivateRoute />}>
+            <Route path="/edit-listing/:listingId" element={<EditListing/>}/>
           </Route>
           
         </Routes>
