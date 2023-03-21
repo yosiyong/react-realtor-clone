@@ -11,6 +11,7 @@ import Offers from "./pages/Offers";
 import Header from "./components/Header";
 import CreateListing from "./pages/CreateListing";
 import EditListing from "./pages/EditListing";
+import Listing from "./pages/Listing";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn/>}/>
           <Route path="/sign-up" element={<SignUp/>}/>
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
+          <Route path="/category/:categoryName/:listingId" element={<Listing/>}/>
           <Route path="/offers" element={<Offers/>}/>
 
           {/* ログイン状態の場合のみアクセス可能 */}
