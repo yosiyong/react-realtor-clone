@@ -14,7 +14,7 @@ import {
     FaParking,
     FaChair,
   } from "react-icons/fa";
-
+  import { useTranslation } from "react-i18next";
 
 export default function Listing() {
     
@@ -23,6 +23,8 @@ export default function Listing() {
     const [loading, setLoading] = useState(true);
     const [shareLinkCopied, setShareLinkCopied] = useState(false);
     const [contactLandlord, setContactLandlord] = useState(false);
+    const { t } = useTranslation();
+
     SwiperCore.use([Autoplay, Navigation, Pagination]);
 
     useEffect(()=>{
@@ -66,6 +68,18 @@ export default function Listing() {
             </SwiperSlide>
         ))}
         </Swiper>
+        <div onClick={()=>{
+          navigator.clipboard.writeText(window.location.href);
+          setShareLinkCopied(true);
+          setTimeout(()=>{
+            setShareLinkCopied(false);
+          }, 2000);
+        }} className='fixed top-[13%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center'>
+          <FaShare className='text-lg text-slate-500'/>
+        </div>
+        {shareLinkCopied && (
+          <p className='fixed top-[23%] right-[5%] font-semibold bg-white border-2 border-gray-400 rounded-md z-10 p-2'>{t('Link Copied')}</p>
+        )}
     </main>
   )
 }
