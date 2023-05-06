@@ -101,7 +101,7 @@ export default function CreateListing() {
         `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${import.meta.env.VITE_GEOCODE_API_KEY}`
       );
       const data = await response.json();
-      console.log("address response:",data);
+      //console.log("address response:",data);
 
       //経緯度取得
       //data.results[0]がtrueの場合、geometry.location.latを取得、nullの場合、0をセット
@@ -134,14 +134,14 @@ export default function CreateListing() {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
+            //console.log("Upload is " + progress + "% done");
             
             switch (snapshot.state) {
               case "paused":
-                console.log("Upload is paused");
+                //console.log("Upload is paused");
                 break;
               case "running":
-                console.log("Upload is running");
+                //console.log("Upload is running");
                 break;
             }
           },
@@ -170,7 +170,7 @@ export default function CreateListing() {
       toast.error(t("Images not uploaded"));
       return;
     });
-    console.log('Uploaded image Url:',imgUrls);
+    //console.log('Uploaded image Url:',imgUrls);
 
     //入力データ変数にDB登録するイメージ保存先URL、経度緯度、timestamp,uid情報を格納
     const formDataCopy = {

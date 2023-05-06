@@ -67,11 +67,11 @@ export default function Profile() {
         await updateDoc(docRef, {
           name,
         });
-        console.log('update success');
+        //console.log('update success');
         toast.success(t("profile update"));
       }
     } catch (error) {
-      console.log('ForgotPassword:',error);
+      //console.log('ForgotPassword:',error);
       toast.error(t("profile error"));
     }
   }

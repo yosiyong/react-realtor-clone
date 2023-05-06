@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 import Spinner from "../components/Spinner";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, {EffectFade, Autoplay, Navigation, Pagination} from "swiper";
@@ -14,7 +14,8 @@ import {
     FaParking,
     FaChair,
   } from "react-icons/fa";
-  import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import Contact from '../components/Contact';
 
 export default function Listing() {
     
@@ -33,7 +34,7 @@ export default function Listing() {
             const docRef = doc(db, "listings", params.listingId );
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                console.log(params.listingId,docSnap.data());
+                //console.log(params.listingId,docSnap.data());
                 setListing(docSnap.data());
                 setLoading(false);
             }
@@ -83,7 +84,7 @@ export default function Listing() {
         )}
 
         <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white lg:space-x-5">
-          <div className="w-full h-[200px] lg-[400px]">
+          <div className="w-full">
 
             <p className="text-2xl font-bold mb-3 text-blue-900">
               {listing.name} - {t("$")}{" "}
@@ -135,7 +136,17 @@ export default function Listing() {
                 {listing.furnished ? t("Furnished") : t("Not furnished")}
               </li>
             </ul>
+            {/* ログイン中のユーザーが掲示物件のオーナーではない場合、ボタン表示 */}
+            {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
+              <div className="mt-6">
+                <button onClick={()=>setContactLandlord(true)} className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out ">{t('Contact landlord')}</button>
+              </div>
+            )}
 
+            {contactLandlord && (
+              <Contact userRef={listing.userRef} listing={listing} />
+            )}
+           
           </div>
           <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden"></div>
         </div>
